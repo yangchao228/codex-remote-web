@@ -34,6 +34,30 @@ npm run start
 
 Open the printed local URL, then enter the pairing code printed in the laptop terminal.
 
+## Run On LAN
+
+Use LAN mode only on a trusted private network.
+
+```bash
+npm run build
+npm run start:lan
+```
+
+The service binds to `0.0.0.0` and prints detected LAN URLs such as:
+
+```text
+LAN URL: http://192.168.1.23:4317
+```
+
+Open that URL from a phone on the same Wi-Fi. In LAN mode, the page cannot refresh or reveal pairing codes. Read the pairing code from the laptop terminal and enter it on the phone.
+
+LAN mode keeps the same execution boundary:
+
+- Codex runs on the laptop.
+- Logs stay on the laptop.
+- The phone cannot choose an executable path, shell command, environment variable, or arbitrary workspace.
+- Public tunnel mode is not enabled.
+
 ## Configuration
 
 Environment variables:
@@ -93,3 +117,19 @@ npm run smoke:codex
 ```
 
 `smoke:codex` creates one read-only prompt through the local service, waits for streamed output containing `REMOTE_CONTROL_OK`, and verifies the local log path exists.
+
+LAN validation:
+
+```bash
+npm run start:lan
+```
+
+Then use the printed laptop pairing code:
+
+```bash
+SMOKE_BASE_URL=http://127.0.0.1:4317 \
+PAIRING_CODE=<printed-code> \
+npm run smoke:lan
+```
+
+`smoke:lan` verifies LAN mode is enabled, the localhost-only pairing-code endpoint is disabled, a paired task can run, and replay logs are readable.

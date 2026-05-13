@@ -331,3 +331,18 @@ Implementation started on 2026-05-12 after approval to proceed with the MVP.
 
 - 2026-05-13: Added a localhost-only `POST /api/local-pairing-code` endpoint and a page button to refresh the pairing code without reading the terminal. The endpoint is disabled when LAN mode is enabled or the request is not from loopback.
 - 2026-05-13: Pairing now disables the button while a request is in flight and hides the pairing panel after success, avoiding accidental double-submit errors.
+
+## LAN Mode Todo
+
+- [x] Add explicit `npm run start:lan` and `npm run dev:lan` commands.
+- [x] Bind LAN mode to `0.0.0.0` only when `REMOTE_CONTROL_ALLOW_LAN=true`.
+- [x] Print local URL, detected LAN URLs, and LAN safety warnings at startup.
+- [x] Disable page-visible pairing-code refresh in LAN mode.
+- [x] Add `npm run smoke:lan` validation for LAN mode, pairing, real Codex runner, replay logs, and disabled local pairing-code endpoint.
+- [x] Document phone usage and LAN security boundary.
+
+## LAN Mode Review Notes
+
+- 2026-05-13: LAN mode verified with `npm run start:lan`. Startup printed local URL and detected LAN URLs. `/api/health` returned `allowLan: true` and `localPairingCodeAvailable: false`.
+- 2026-05-13: Verified `POST /api/local-pairing-code` returns 403 in LAN mode, and the page contains logic to disable the refresh button with the LAN warning text.
+- 2026-05-13: Validation passed: `npm run lint`, `npm test`, and `SMOKE_BASE_URL=http://127.0.0.1:4317 PAIRING_CODE=<terminal-code> npm run smoke:lan`.

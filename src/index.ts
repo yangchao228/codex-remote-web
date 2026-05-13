@@ -1,9 +1,17 @@
+import os from "node:os";
 import { AuditLog } from "./audit.js";
 import { AuthService } from "./auth.js";
 import { loadConfig } from "./config.js";
 import { createServer } from "./http.js";
 import { CodexRunner } from "./runner.js";
 import { SessionManager } from "./session-manager.js";
+
+function getLanUrls(port: number): string[] {
+  return Object.values(os.networkInterfaces())
+    .flatMap((items) => items ?? [])
+    .filter((item) => item.family === "IPv4" && !item.internal)
+    .map((item) => `http://${item.address}:${port}`);
+}
 
 async function main(): Promise<void> {
   const config = loadConfig();
@@ -21,7 +29,11 @@ async function main(): Promise<void> {
     console.log(`Codex Remote Control listening on http://${config.host}:${config.port}`);
     console.log(`Security mode: ${config.allowLan ? "LAN enabled" : "localhost only"}`);
     if (config.allowLan) {
-      console.warn("LAN mode is enabled. Only use it on a trusted network after pairing is understood.");
+      console.warn("LAN mode is enabled. Use only on a trusted network.");
+      console.warn("The browser cannot refresh or reveal pairing codes in LAN mode.");
+      console.log(`Local URL: http://127.0.0.1:${config.port}`);
+      const lanUrls = getLanUrls(config.port);
+      console.log(`LAN URL${lanUrls.length === 1 ? "" : "s"}: ${lanUrls.length ? lanUrls.join(", ") : "none detected"}`);
     }
     console.log(`Workspace allowlist: ${config.workspaceAllowlist.join(", ")}`);
     console.log(`Restored sessions: ${restoredSessionCount}`);
