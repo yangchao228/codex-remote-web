@@ -4,12 +4,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 
 const baseUrl = process.env.SMOKE_BASE_URL ?? "http://127.0.0.1:4317";
-const pairingCode = process.env.PAIRING_CODE;
-
-if (!pairingCode) {
-  console.error("PAIRING_CODE is required");
-  process.exit(2);
-}
+let pairingCode = process.env.PAIRING_CODE;
 
 let token = "";
 
@@ -64,6 +59,12 @@ const health = await api("/api/health", { method: "GET", headers: {} });
 assert.equal(health.ok, true);
 assert.equal(health.allowLan, false);
 
+if (!pairingCode) {
+  const localPairing = await api("/api/local-pairing-code", { method: "POST", headers: {} });
+  pairingCode = localPairing.code;
+}
+assert.ok(pairingCode);
+
 const pairing = await api("/api/pair", {
   method: "POST",
   body: JSON.stringify({ code: pairingCode }),
@@ -98,6 +99,14 @@ assert.equal(stopStream.finalStatus, "stopped");
 const sessions = await api("/api/tasks", { method: "GET" });
 assert.ok(sessions.sessions.some((session) => session.id === run.session.id && session.status === "completed"));
 assert.ok(sessions.sessions.some((session) => session.id === stopRun.session.id && session.status === "stopped"));
+
+const runDetail = await api(`/api/tasks/${run.session.id}`, { method: "GET" });
+assert.equal(runDetail.session.status, "completed");
+assert.ok(runDetail.events.some((event) => event.text?.includes("mock output 3")));
+
+const stopDetail = await api(`/api/tasks/${stopRun.session.id}`, { method: "GET" });
+assert.equal(stopDetail.session.status, "stopped");
+assert.ok(stopDetail.events.some((event) => event.text?.includes("Stop requested")));
 
 await fs.access(run.session.logPath);
 await fs.access(stopRun.session.logPath);

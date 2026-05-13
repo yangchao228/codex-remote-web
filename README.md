@@ -12,6 +12,7 @@ Local-first browser control panel for running controlled Codex CLI tasks on this
 - Stops the active Codex process group on request.
 - Writes append-only audit and stream logs under `data/`.
 - Restores recent task history from `data/audit.jsonl` on startup.
+- Replays historical task output from local JSONL log files.
 
 ## Safety Boundary
 
@@ -21,6 +22,7 @@ Local-first browser control panel for running controlled Codex CLI tasks on this
 - Workspace selection is limited to `REMOTE_CONTROL_WORKSPACES`.
 - The service binds to `127.0.0.1` by default.
 - Bearer tokens are held in browser memory and are not placed in URLs.
+- The page can refresh a pairing code only from localhost when LAN mode is disabled.
 
 ## Run Locally
 
@@ -70,11 +72,10 @@ REMOTE_CONTROL_CODEX_BIN=/Users/yangchao/work/codex/remote-control/scripts/mock-
 npm run start
 ```
 
-Then, in another terminal, use the printed pairing code:
+Then, in another terminal, either omit `PAIRING_CODE` to let the smoke script use the localhost-only pairing-code endpoint, or pass the printed pairing code explicitly:
 
 ```bash
 SMOKE_BASE_URL=http://127.0.0.1:4321 \
-PAIRING_CODE=<printed-code> \
 npm run smoke:local
 ```
 
@@ -84,11 +85,10 @@ Smoke validation with the real Codex CLI runner:
 REMOTE_CONTROL_PORT=4322 npm run start
 ```
 
-Then, in another terminal, use the printed pairing code:
+Then, in another terminal:
 
 ```bash
 SMOKE_BASE_URL=http://127.0.0.1:4322 \
-PAIRING_CODE=<printed-code> \
 npm run smoke:codex
 ```
 

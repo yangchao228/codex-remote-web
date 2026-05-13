@@ -307,3 +307,27 @@ Implementation started on 2026-05-12 after approval to proceed with the MVP.
 - 2026-05-12: Added startup session recovery from `data/audit.jsonl`. The service now prints restored session count at startup, and recovered `running` / `stopping` records are marked `failed` in memory so they do not become active after restart.
 - 2026-05-12: Added `npm run smoke:codex` for the real Codex CLI runner. Validation passed with `SMOKE_BASE_URL=http://127.0.0.1:4322 PAIRING_CODE=<code> npm run smoke:codex`, producing a completed session and local log path.
 - 2026-05-12: Validation passed: `npm run lint`, `npm run build`, `npm test` with 10 tests, `npm run smoke:local`, and `npm run smoke:codex`.
+
+## UI History Replay Todo
+
+- [x] Add authenticated `GET /api/tasks/:id` detail endpoint with session metadata and replay events.
+- [x] Make recent task entries clickable in the mobile UI.
+- [x] Replay historical output into the output panel from local JSONL events.
+- [x] Show status, timestamps, exit code, signal, workspace, and local log path for selected tasks.
+- [x] Avoid rendering prompt or workspace text through unsafe HTML interpolation.
+- [x] Extend smoke scripts to verify task detail replay events.
+
+## UI History Replay Review Notes
+
+- 2026-05-13: Added clickable history replay in the mobile UI. Selecting a recent task loads session metadata and local JSONL stream events through the authenticated detail API, then renders the historical output without using unsafe HTML interpolation for prompt or workspace text.
+- 2026-05-13: Validation passed: `npm run lint`, `npm test`, `npm run smoke:local`, and `npm run smoke:codex`.
+
+## Output Readability Review Notes
+
+- 2026-05-13: Optimized the stream output panel to format common Codex JSONL events into readable text, including session creation, turn start, assistant messages, token usage, completion, stop, and failure states. Local logs still keep the original event text.
+- 2026-05-13: Validation passed: `npm run lint`, `npm test`, and `npm run smoke:local`.
+
+## Pairing UX Review Notes
+
+- 2026-05-13: Added a localhost-only `POST /api/local-pairing-code` endpoint and a page button to refresh the pairing code without reading the terminal. The endpoint is disabled when LAN mode is enabled or the request is not from loopback.
+- 2026-05-13: Pairing now disables the button while a request is in flight and hides the pairing panel after success, avoiding accidental double-submit errors.

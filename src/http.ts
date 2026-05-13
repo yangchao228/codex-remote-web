@@ -42,6 +42,11 @@ function requireAuth(request: IncomingMessage, response: ServerResponse, auth: A
   return false;
 }
 
+function isLoopbackRequest(request: IncomingMessage): boolean {
+  const address = request.socket.remoteAddress;
+  return address === "127.0.0.1" || address === "::1" || address === "::ffff:127.0.0.1";
+}
+
 function writeSse(response: ServerResponse, event: string, data: unknown): void {
   response.write(`event: ${event}\n`);
   response.write(`data: ${JSON.stringify(data)}\n\n`);
@@ -74,7 +79,21 @@ export function createServer(config: AppConfig, auth: AuthService, sessions: Ses
           host: config.host,
           port: config.port,
           allowLan: config.allowLan,
+          localPairingCodeAvailable: !config.allowLan,
           workspaces: config.workspaceAllowlist,
+        });
+        return;
+      }
+
+      if (request.method === "POST" && url.pathname === "/api/local-pairing-code") {
+        if (config.allowLan || !isLoopbackRequest(request)) {
+          sendError(response, 403, "Pairing code can only be shown on localhost when LAN mode is disabled");
+          return;
+        }
+        const pairing = auth.rotatePairingCode();
+        sendJson(response, 200, {
+          code: pairing.code,
+          expiresAt: new Date(pairing.expiresAt).toISOString(),
         });
         return;
       }
@@ -104,6 +123,22 @@ export function createServer(config: AppConfig, auth: AuthService, sessions: Ses
       if (request.method === "GET" && url.pathname === "/api/tasks") {
         if (!requireAuth(request, response, auth)) return;
         sendJson(response, 200, { sessions: sessions.listSessions() });
+        return;
+      }
+
+      const detailMatch = url.pathname.match(/^\/api\/tasks\/([^/]+)$/);
+      if (request.method === "GET" && detailMatch) {
+        if (!requireAuth(request, response, auth)) return;
+        const id = detailMatch[1] ?? "";
+        const session = sessions.getSession(id);
+        if (!session) {
+          sendError(response, 404, "Session not found");
+          return;
+        }
+        sendJson(response, 200, {
+          session,
+          events: await sessions.readEvents(id),
+        });
         return;
       }
 
