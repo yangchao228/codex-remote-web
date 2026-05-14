@@ -347,6 +347,15 @@ Implementation started on 2026-05-12 after approval to proceed with the MVP.
 - 2026-05-13: Verified `POST /api/local-pairing-code` returns 403 in LAN mode, and the page contains logic to disable the refresh button with the LAN warning text.
 - 2026-05-13: Validation passed: `npm run lint`, `npm test`, and `SMOKE_BASE_URL=http://127.0.0.1:4317 PAIRING_CODE=<terminal-code> npm run smoke:lan`.
 
+## Multi-Project Workspace Roadmap
+
+- [ ] Add project aliases for configured workspaces so the phone UI does not need to show full local paths.
+- [ ] Add a workspace config file such as `remote-control.workspaces.json` for aliases, default Codex args, safety notes, and task templates.
+- [ ] Show recent task, running status, last result, and quick actions per workspace.
+- [ ] Add history filtering by workspace.
+- [ ] Preserve the current allowlist and realpath safety boundary for every workspace selection.
+- [ ] Document how to configure multiple projects for users who track several repos at the same time.
+
 ## Chinese Open Source README Todo
 
 - [x] Read the current README, package scripts, source capabilities, and existing MVP plan.
@@ -363,3 +372,11 @@ Implementation started on 2026-05-12 after approval to proceed with the MVP.
 - 2026-05-14: Added a WeChat promotional draft at `docs/wechat-promo-codex-remote-web.md`, positioning the project as a safe phone control panel for local Codex CLI and adding follow-up update hooks for official-account subscribers.
 - 2026-05-14: Verified current OpenAI Codex official surfaces before strengthening the WeChat opening. The draft now avoids claiming OpenAI has no remote tooling, and instead positions this project as a lightweight mobile-browser control panel for local Codex CLI.
 - 2026-05-14: Updated the root Chinese `README.md` to use screenshots from `docs/imgs`, including a LAN-mode hero image and three mobile UI preview images for pairing, task output, and history/status.
+- 2026-05-14: Added MIT `LICENSE` and updated README license sections to link to it.
+- 2026-05-14: Updated the WeChat promotional draft to include the actual interaction screenshots from `docs/imgs`, with inline captions for LAN mode, pairing, task output, and history/status.
+- 2026-05-14: Uploaded the WeChat promotional draft images to Cloudflare R2 and replaced inline image references with `https://images.reai.group/...` URLs so the article can render outside the local repository.
+- 2026-05-14: Optimized the WeChat promotional draft structure with clearer section headings, cover summary, stronger title options, and a more scannable flow from official capability gap to demo, safety boundary, usage, roadmap, and follow-up CTA.
+- 2026-05-14: Added a low-cost usage tip to the root README and WeChat promotional draft, explaining that users can download the GitHub project locally, start Codex in the project root, and ask Codex to launch the project without first reading the code or full installation instructions.
+- 2026-05-14: Added multi-project workspace management to the README roadmap and captured a concrete roadmap for project aliases, workspace config, per-project status, and history filtering.
+- 2026-05-14: Adjusted pairing-code refresh so it is allowed from the computer's localhost page even while LAN mode is enabled, while LAN/mobile clients still cannot reveal or rotate the pairing code.
+- 2026-05-14: Synchronized `README.en.md` with the Chinese README structure by adding the screenshot preview section, lowest-friction Codex startup tip, and multi-project workspace roadmap items.

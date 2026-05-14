@@ -1,0 +1,37 @@
+{
+  "file": "/Users/yangchao/work/codex/remote-control/docs/wechat-promo-codex-remote-web.md",
+  "bucket": "human3",
+  "endpoint": "https://5e4c8fb961f54664370337cec79396f1.r2.cloudflarestorage.com",
+  "public_base_url": "https://images.reai.group",
+  "key_prefix": "images",
+  "dotenv_path": "/Users/yangchao/.codex/skills/md-img-r2/.env",
+  "replaced": [
+    {
+      "kind": "md",
+      "from": "imgs/r2-upload/lan-mode.jpg",
+      "to": "https://images.reai.group/images/0552991e828f60aa-lan-mode.jpg",
+      "resolved": "/Users/yangchao/work/codex/remote-control/docs/imgs/r2-upload/lan-mode.jpg",
+      "object_key": "images/0552991e828f60aa-lan-mode.jpg"
+    },
+    {
+      "kind": "md",
+      "from": "imgs/r2-upload/phone-task-output.jpg",
+      "to": "https://images.reai.group/images/598cd2e03b5496bf-phone-task-output.jpg",
+      "resolved": "/Users/yangchao/work/codex/remote-control/docs/imgs/r2-upload/phone-task-output.jpg",
+      "object_key": "images/598cd2e03b5496bf-phone-task-output.jpg"
+    }
+  ],
+  "skipped_remote": [
+    {
+      "kind": "md",
+      "link": "https://images.reai.group/images/dd93b3bbc3de7e84-1.jpg"
+    },
+    {
+      "kind": "md",
+      "link": "https://images.reai.group/images/a4e9becf576ddb05-3.jpg"
+    }
+  ],
+  "missing_files": [],
+  "upload_failed": [],
+  "dry_run": false
+}

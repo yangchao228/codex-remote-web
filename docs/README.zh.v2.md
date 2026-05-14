@@ -197,4 +197,4 @@ docs/
 
 ## License
 
-开源协议待补充。
+MIT License. 详见 [../LICENSE](../LICENSE)。

@@ -8,7 +8,7 @@ Codex CLI is already useful for reading code, changing code, and running tests o
 
 `codex-cli-remote-control` is built for that workflow. The phone is only a browser-based control panel. Your computer remains the execution environment. Codex CLI still runs locally.
 
-![Codex control panel on mobile](docs/vibe%20coding%20codex%20mobile.jpg)
+![Phone connected to Codex on the computer in LAN mode](docs/imgs/远程操控电脑codex-lan手机模式.jpg)
 
 ## One-Line Summary
 
@@ -45,7 +45,29 @@ This is a remote-control tool, but it behaves more like a task console. It does 
 - Local JSONL audit records
 - Trusted LAN mode
 
+## Preview
+
+The phone UI is a lightweight control panel: pair with the computer, choose a workspace, submit a task, watch Codex output, and replay task history.
+
+| Pairing And Connection | Submit Task And Watch Output | History And Status |
+| --- | --- | --- |
+| <img src="docs/imgs/手机1.jpg" alt="Phone pairing and connection status" width="260"> | <img src="docs/imgs/手机2.jpg" alt="Submit a Codex task and watch output on the phone" width="260"> | <img src="docs/imgs/手机3.jpg" alt="Recent tasks and status on the phone" width="260"> |
+
 ## Usage
+
+### Lowest-Friction Start
+
+If you do not want to read the code or installation instructions first, download this GitHub project locally, start Codex in the project root, and tell it:
+
+```text
+Start this project for me
+```
+
+Codex can read the project structure, `package.json`, and README, then install dependencies, build, and start the service. You only need to open the printed URL and enter the pairing code from the computer terminal.
+
+This keeps the first-run cost low: no need to understand the code first, and no need to read the full installation guide before trying it. On the first run, still check the printed access URL, LAN-mode warning, and 6-digit pairing code.
+
+### Manual Start
 
 Install dependencies and build:
 
@@ -118,7 +140,8 @@ Near-term priorities:
 - Task templates: turn common Codex workflows like "review this branch", "fix this error", "add tests", and "explain this code" into reusable tasks.
 - Task history as an asset: make every Codex run searchable, reviewable, and reusable.
 - Better mobile reading: collapse long output, highlight important parts, and make failed states easier to inspect.
-- Multi-workspace management: give each project its own defaults, safety policy, and task templates.
+- Multi-project workspace: configure aliases, default parameters, safety policy, and task templates for each workspace, so it is easier to track several projects at once.
+- Workspace status dashboard: show recent tasks, running tasks, last result, and history filters by project.
 - Local notifications: notify the phone or desktop when a long task completes.
 - Safe remote access: allow a phone on mobile data to connect to Codex running on a home or office computer, with device authorization, short-lived tokens, access audit logs, and one-click disconnect.
 - Desktop resident entry point: reduce the cost of starting the service every time.
@@ -157,4 +180,4 @@ The project is still early. Issues with real scenarios and improvement ideas are
 
 ## License
 
-License to be added before the first public release.
+MIT License. See [LICENSE](LICENSE).

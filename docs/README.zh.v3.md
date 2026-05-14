@@ -155,4 +155,4 @@ MVP 已经可运行，并已覆盖：
 
 ## License
 
-开源协议待补充。
+MIT License. 详见 [../LICENSE](../LICENSE)。
