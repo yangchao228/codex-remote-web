@@ -180,6 +180,16 @@ MVP 已经可运行，并已覆盖：
 
 项目还在早期阶段，欢迎用 Issue 提真实场景和改进建议。
 
+## 关于作者
+
+`微信公众号`：AI生命克劳德 
+
+`twitter/x`: @yangchao228
+
+相关项目更新第一时间同步到公众号和X平台！ 欢迎关注，谢谢！
+---
+
+
 ## License
 
 MIT License. 详见 [LICENSE](LICENSE)。
