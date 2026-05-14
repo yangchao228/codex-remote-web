@@ -346,3 +346,19 @@ Implementation started on 2026-05-12 after approval to proceed with the MVP.
 - 2026-05-13: LAN mode verified with `npm run start:lan`. Startup printed local URL and detected LAN URLs. `/api/health` returned `allowLan: true` and `localPairingCodeAvailable: false`.
 - 2026-05-13: Verified `POST /api/local-pairing-code` returns 403 in LAN mode, and the page contains logic to disable the refresh button with the LAN warning text.
 - 2026-05-13: Validation passed: `npm run lint`, `npm test`, and `SMOKE_BASE_URL=http://127.0.0.1:4317 PAIRING_CODE=<terminal-code> npm run smoke:lan`.
+
+## Chinese Open Source README Todo
+
+- [x] Read the current README, package scripts, source capabilities, and existing MVP plan.
+- [x] Draft three Chinese README candidates with different positioning.
+- [x] Include current capabilities, local/LAN usage, security boundary, validation, and follow-up roadmap.
+- [x] Keep the current root README unchanged until the preferred version is selected.
+- [x] Review the generated candidates for consistency with the implemented MVP.
+
+## Chinese Open Source README Review Notes
+
+- 2026-05-14: Added three candidate Chinese README drafts under `docs/`: product-oriented, developer-oriented, and story/vision-oriented. The root `README.md` was left unchanged so the preferred version can be selected before replacement.
+- 2026-05-14: Clarified that current access is localhost / trusted LAN only, and added safe remote mobile-network access to the roadmap as a future capability rather than a default public exposure mode.
+- 2026-05-14: Promoted `docs/README.zh.v3.md` to the root `README.md` as the official Chinese version, added `README.en.md`, and linked the two files for language switching.
+- 2026-05-14: Added a WeChat promotional draft at `docs/wechat-promo-codex-remote-web.md`, positioning the project as a safe phone control panel for local Codex CLI and adding follow-up update hooks for official-account subscribers.
+- 2026-05-14: Verified current OpenAI Codex official surfaces before strengthening the WeChat opening. The draft now avoids claiming OpenAI has no remote tooling, and instead positions this project as a lightweight mobile-browser control panel for local Codex CLI.
