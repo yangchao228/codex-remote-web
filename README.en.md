@@ -8,7 +8,7 @@ Codex CLI is already useful for reading code, changing code, and running tests o
 
 `codex-cli-remote-control` is built for that workflow. The phone is only a browser-based control panel. Your computer remains the execution environment. Codex CLI still runs locally.
 
-![Phone connected to Codex on the computer in LAN mode](docs/imgs/远程操控电脑codex-lan手机模式.jpg)
+![Phone connected to Codex on the computer in LAN mode](https://images.reai.group/images/0552991e828f60aa-lan-mode.jpg)
 
 ## One-Line Summary
 
@@ -51,7 +51,7 @@ The phone UI is a lightweight control panel: pair with the computer, choose a wo
 
 | Pairing And Connection | Submit Task And Watch Output | History And Status |
 | --- | --- | --- |
-| <img src="docs/imgs/手机1.jpg" alt="Phone pairing and connection status" width="260"> | <img src="docs/imgs/手机2.jpg" alt="Submit a Codex task and watch output on the phone" width="260"> | <img src="docs/imgs/手机3.jpg" alt="Recent tasks and status on the phone" width="260"> |
+| <img src="https://images.reai.group/images/dd93b3bbc3de7e84-1.jpg" alt="Phone pairing and connection status" width="260"> | <img src="https://images.reai.group/images/598cd2e03b5496bf-phone-task-output.jpg" alt="Submit a Codex task and watch output on the phone" width="260"> | <img src="https://images.reai.group/images/a4e9becf576ddb05-3.jpg" alt="Recent tasks and status on the phone" width="260"> |
 
 ## Usage
 
