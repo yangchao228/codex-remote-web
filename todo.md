@@ -362,3 +362,4 @@ Implementation started on 2026-05-12 after approval to proceed with the MVP.
 - 2026-05-14: Promoted `docs/README.zh.v3.md` to the root `README.md` as the official Chinese version, added `README.en.md`, and linked the two files for language switching.
 - 2026-05-14: Added a WeChat promotional draft at `docs/wechat-promo-codex-remote-web.md`, positioning the project as a safe phone control panel for local Codex CLI and adding follow-up update hooks for official-account subscribers.
 - 2026-05-14: Verified current OpenAI Codex official surfaces before strengthening the WeChat opening. The draft now avoids claiming OpenAI has no remote tooling, and instead positions this project as a lightweight mobile-browser control panel for local Codex CLI.
+- 2026-05-14: Updated the root Chinese `README.md` to use screenshots from `docs/imgs`, including a LAN-mode hero image and three mobile UI preview images for pairing, task output, and history/status.
