@@ -304,7 +304,9 @@ export function htmlPage(): string {
       localPairingCodeAvailable = Boolean(health.localPairingCodeAvailable);
       $("refreshCode").disabled = !localPairingCodeAvailable;
       if (!localPairingCodeAvailable) {
-        $("refreshCode").textContent = "LAN 模式下不可在页面显示配对码";
+        $("refreshCode").textContent = "仅电脑本机页面可刷新配对码";
+      } else {
+        $("refreshCode").textContent = "刷新本机配对码";
       }
     }
     function setWorkspaces(workspaces) {

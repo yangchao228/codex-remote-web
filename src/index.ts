@@ -30,7 +30,7 @@ async function main(): Promise<void> {
     console.log(`Security mode: ${config.allowLan ? "LAN enabled" : "localhost only"}`);
     if (config.allowLan) {
       console.warn("LAN mode is enabled. Use only on a trusted network.");
-      console.warn("The browser cannot refresh or reveal pairing codes in LAN mode.");
+      console.warn("LAN clients cannot refresh or reveal pairing codes; use the localhost page on this computer.");
       console.log(`Local URL: http://127.0.0.1:${config.port}`);
       const lanUrls = getLanUrls(config.port);
       console.log(`LAN URL${lanUrls.length === 1 ? "" : "s"}: ${lanUrls.length ? lanUrls.join(", ") : "none detected"}`);

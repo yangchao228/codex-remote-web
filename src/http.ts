@@ -79,15 +79,15 @@ export function createServer(config: AppConfig, auth: AuthService, sessions: Ses
           host: config.host,
           port: config.port,
           allowLan: config.allowLan,
-          localPairingCodeAvailable: !config.allowLan,
+          localPairingCodeAvailable: isLoopbackRequest(request),
           workspaces: config.workspaceAllowlist,
         });
         return;
       }
 
       if (request.method === "POST" && url.pathname === "/api/local-pairing-code") {
-        if (config.allowLan || !isLoopbackRequest(request)) {
-          sendError(response, 403, "Pairing code can only be shown on localhost when LAN mode is disabled");
+        if (!isLoopbackRequest(request)) {
+          sendError(response, 403, "Pairing code can only be shown on the computer's localhost page");
           return;
         }
         const pairing = auth.rotatePairingCode();

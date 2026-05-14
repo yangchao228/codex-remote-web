@@ -6,6 +6,8 @@ import fs from "node:fs/promises";
 const baseUrl = process.env.SMOKE_BASE_URL ?? "http://127.0.0.1:4317";
 let pairingCode = process.env.PAIRING_CODE;
 const expectAllowLan = process.env.SMOKE_EXPECT_ALLOW_LAN === "true";
+const baseHostname = new URL(baseUrl).hostname;
+const baseIsLoopback = baseHostname === "127.0.0.1" || baseHostname === "localhost" || baseHostname === "::1";
 
 let token = "";
 
@@ -59,8 +61,9 @@ async function readStream(sessionId, stopAfterFirstOutput = false) {
 const health = await api("/api/health", { method: "GET", headers: {} });
 assert.equal(health.ok, true);
 assert.equal(health.allowLan, expectAllowLan);
+assert.equal(health.localPairingCodeAvailable, baseIsLoopback);
 
-if (expectAllowLan) {
+if (expectAllowLan && !baseIsLoopback) {
   const response = await fetch(`${baseUrl}/api/local-pairing-code`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -69,7 +72,6 @@ if (expectAllowLan) {
 }
 
 if (!pairingCode) {
-  assert.equal(health.localPairingCodeAvailable, true);
   const localPairing = await api("/api/local-pairing-code", { method: "POST", headers: {} });
   pairingCode = localPairing.code;
 }

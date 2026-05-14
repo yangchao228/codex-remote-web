@@ -380,3 +380,4 @@ Implementation started on 2026-05-12 after approval to proceed with the MVP.
 - 2026-05-14: Added multi-project workspace management to the README roadmap and captured a concrete roadmap for project aliases, workspace config, per-project status, and history filtering.
 - 2026-05-14: Adjusted pairing-code refresh so it is allowed from the computer's localhost page even while LAN mode is enabled, while LAN/mobile clients still cannot reveal or rotate the pairing code.
 - 2026-05-14: Synchronized `README.en.md` with the Chinese README structure by adding the screenshot preview section, lowest-friction Codex startup tip, and multi-project workspace roadmap items.
+- 2026-05-14: Added a WeChat article bonus section inviting readers to follow and reply `Codex` for a Codex advanced resource pack.

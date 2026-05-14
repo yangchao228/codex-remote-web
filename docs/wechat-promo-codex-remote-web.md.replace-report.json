@@ -8,23 +8,20 @@
   "replaced": [
     {
       "kind": "md",
-      "from": "imgs/r2-upload/lan-mode.jpg",
-      "to": "https://images.reai.group/images/0552991e828f60aa-lan-mode.jpg",
-      "resolved": "/Users/yangchao/work/codex/remote-control/docs/imgs/r2-upload/lan-mode.jpg",
-      "object_key": "images/0552991e828f60aa-lan-mode.jpg"
-    },
-    {
-      "kind": "md",
-      "from": "imgs/r2-upload/phone-task-output.jpg",
-      "to": "https://images.reai.group/images/598cd2e03b5496bf-phone-task-output.jpg",
-      "resolved": "/Users/yangchao/work/codex/remote-control/docs/imgs/r2-upload/phone-task-output.jpg",
-      "object_key": "images/598cd2e03b5496bf-phone-task-output.jpg"
+      "from": "image-1.png",
+      "to": "https://images.reai.group/images/4d2d20b3e001e890-image-1.png",
+      "resolved": "/Users/yangchao/work/codex/remote-control/docs/image-1.png",
+      "object_key": "images/4d2d20b3e001e890-image-1.png"
     }
   ],
   "skipped_remote": [
     {
       "kind": "md",
       "link": "https://images.reai.group/images/dd93b3bbc3de7e84-1.jpg"
+    },
+    {
+      "kind": "md",
+      "link": "https://images.reai.group/images/598cd2e03b5496bf-phone-task-output.jpg"
     },
     {
       "kind": "md",
