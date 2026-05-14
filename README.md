@@ -2,6 +2,8 @@
 
 中文 | [English](README.en.md)
 
+![alt text](https://images.reai.group/images/4371ae75f368a083-wechat-hero.png)
+
 我想要的是一个更安全的本机 AI 工作台，手机只承担控制面板的角色。
 
 Codex CLI 已经可以在电脑上帮我们读代码、改代码、跑测试。但真实使用时有一个很小的痛点：很多任务开始之后，人其实可以离开电脑，可是你仍然需要知道它有没有跑完、输出了什么、要不要停掉。
