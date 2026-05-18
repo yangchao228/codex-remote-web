@@ -69,6 +69,7 @@ function printHelp() {
   console.log(`Usage: npm run remote:quick -- [--ttl 24h] [--port 4317]
 
 Starts a temporary Cloudflare quick tunnel for mobile remote access.
+启动一个临时 Cloudflare quick tunnel，让手机移动网络访问本机 Codex 控制台。
 
 Defaults:
   --ttl  24h   Auto-stop both the local server and tunnel after this duration.
@@ -122,6 +123,49 @@ function waitForPattern(child, pattern, label) {
 function pipeAfterReady(child) {
   child.stdout?.on("data", (chunk) => process.stdout.write(chunk));
   child.stderr?.on("data", (chunk) => process.stderr.write(chunk));
+}
+
+function printReadySummary({ url, pairingCode, ttlMs, pairingTtlSeconds, expiresAt }) {
+  console.log(`
+================================================================
+手机移动网络访问已就绪
+================================================================
+
+手机访问地址：
+  ${url}
+
+配对码：
+  ${pairingCode}
+
+自动关闭：
+  ${formatDuration(ttlMs)} 后自动关闭（${expiresAt.toLocaleString()}）
+
+使用提示：
+  - 保持这个终端打开，关闭终端后临时地址会失效。
+  - 手机可以使用移动网络访问，Codex 仍然在这台电脑上执行。
+  - 配对码 ${formatDuration(pairingTtlSeconds * 1000)} 后过期。
+  - 按 Ctrl+C 会立即关闭本地服务和 tunnel。
+
+================================================================
+Mobile remote access is ready
+================================================================
+
+Phone URL:
+  ${url}
+
+Pairing code:
+  ${pairingCode}
+
+Auto-stop:
+  ${formatDuration(ttlMs)} (${expiresAt.toLocaleString()})
+
+Notes:
+  - Keep this terminal open while using the tunnel.
+  - Phone can be on mobile data; the computer remains the execution environment.
+  - The pairing code expires in ${formatDuration(pairingTtlSeconds * 1000)}.
+  - Press Ctrl+C to stop immediately.
+================================================================
+`);
 }
 
 function stopProcess(child, signal = "SIGTERM") {
@@ -195,24 +239,13 @@ async function main() {
   const urlMatch = await waitForPattern(tunnel, /(https:\/\/[a-zA-Z0-9-]+\.trycloudflare\.com)/, "cloudflared");
   pipeAfterReady(tunnel);
 
-  console.log(`
-Remote quick access is ready.
-
-Phone URL:
-  ${urlMatch[1]}
-
-Pairing code:
-  ${pairingMatch[1]}
-
-Auto-stop:
-  ${formatDuration(options.ttlMs)} (${expiresAt.toLocaleString()})
-
-Notes:
-  - Keep this terminal open while using the tunnel.
-  - Phone can be on mobile data; the computer remains the execution environment.
-  - The pairing code expires in ${formatDuration(pairingTtlSeconds * 1000)}.
-  - Press Ctrl+C to stop immediately.
-`);
+  printReadySummary({
+    url: urlMatch[1],
+    pairingCode: pairingMatch[1],
+    ttlMs: options.ttlMs,
+    pairingTtlSeconds,
+    expiresAt,
+  });
 
   setTimeout(() => cleanup("TTL expired"), options.ttlMs).unref();
 }
