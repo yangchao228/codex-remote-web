@@ -12,6 +12,9 @@ export interface AppConfig {
   promptMaxLength: number;
   tokenTtlMs: number;
   pairingCodeTtlMs: number;
+  pairingCodeLength: number;
+  pairingFailureLimit: number;
+  pairingFailureWindowMs: number;
   dataDir: string;
 }
 

@@ -158,6 +158,8 @@ Avoid storing:
 - [x] Print the active bind address and access URL at startup.
 - [x] Warn when LAN mode is enabled.
 - [x] Do not enable public tunnel mode in MVP.
+- [x] Add remote-access hardening for tunnel use: configurable longer pairing codes and invalid pairing attempt limits.
+- [x] Document mobile-data remote access through a private network or protected tunnel without router port forwarding.
 
 ### Input Safety
 
@@ -240,6 +242,14 @@ Implementation started on 2026-05-12 after approval to proceed with the MVP.
 - [x] Stream output back to phone.
 - [x] Cancel a running task.
 - [x] Confirm logs remain local.
+
+### Phase 6: Mobile Data Remote Access
+
+- [x] Add remote-hardened start mode with 12-digit pairing code, shorter pairing lifetime, shorter token lifetime, and invalid pairing attempt limits.
+- [x] Add mobile-data remote access runbook for private network or protected tunnel usage.
+- [x] Choose and approve the real remote-access path: private VPN/Tailscale, protected Cloudflare Tunnel, or a short-lived quick tunnel demo.
+- [x] Verify from a phone with Wi-Fi disabled against the chosen tunnel or private network URL.
+- [x] Record final mobile-data demo evidence.
 
 ## Validation Steps
 

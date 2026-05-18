@@ -29,6 +29,11 @@ function readList(name: string, fallback: string[]): string[] {
 export function loadConfig(): AppConfig {
   const host = process.env.REMOTE_CONTROL_HOST ?? "127.0.0.1";
   const allowLan = readBoolean("REMOTE_CONTROL_ALLOW_LAN", false);
+  const pairingCodeLength = readNumber("REMOTE_CONTROL_PAIRING_CODE_LENGTH", 6);
+
+  if (pairingCodeLength < 6 || pairingCodeLength > 24) {
+    throw new Error("REMOTE_CONTROL_PAIRING_CODE_LENGTH must be between 6 and 24");
+  }
 
   if (!allowLan && host !== "127.0.0.1" && host !== "localhost") {
     throw new Error("LAN binding requires REMOTE_CONTROL_ALLOW_LAN=true");
@@ -48,6 +53,9 @@ export function loadConfig(): AppConfig {
     promptMaxLength: readNumber("REMOTE_CONTROL_PROMPT_MAX_LENGTH", 8000),
     tokenTtlMs: readNumber("REMOTE_CONTROL_TOKEN_TTL_SECONDS", 60 * 60) * 1000,
     pairingCodeTtlMs: readNumber("REMOTE_CONTROL_PAIRING_TTL_SECONDS", 10 * 60) * 1000,
+    pairingCodeLength,
+    pairingFailureLimit: readNumber("REMOTE_CONTROL_PAIRING_FAILURE_LIMIT", 5),
+    pairingFailureWindowMs: readNumber("REMOTE_CONTROL_PAIRING_FAILURE_WINDOW_SECONDS", 60) * 1000,
     dataDir: path.resolve(process.env.REMOTE_CONTROL_DATA_DIR ?? "data"),
   };
 }

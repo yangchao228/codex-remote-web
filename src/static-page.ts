@@ -46,12 +46,17 @@ export function htmlPage(): string {
     .badge.completed { color: #126b57; border-color: #83c5b2; background: #ebf8f3; }
     .badge.failed, .badge.stopped { color: var(--danger); border-color: #eba59f; background: #fff1f0; }
     .output-timeline { min-height: 220px; max-height: 56vh; overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: #fbfbf8; padding: 10px; display: grid; gap: 8px; }
+    .output-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .output-bar h2 { margin: 0; }
+    .inline-toggle { display: inline-flex; align-items: center; gap: 6px; width: auto; margin: 0; white-space: nowrap; }
+    .inline-toggle input { width: auto; }
     .output-empty { color: var(--muted); font-size: 13px; padding: 8px 2px; }
     .output-entry { border: 1px solid var(--line); border-left-width: 4px; border-radius: 8px; background: #fff; padding: 9px 10px; }
     .output-entry.status { border-left-color: #8a8f98; }
     .output-entry.assistant { border-left-color: var(--accent); }
     .output-entry.tool { border-left-color: #6f5bd6; }
     .output-entry.usage { border-left-color: #2f6f9f; }
+    .output-entry.detail { border-left-color: #8a8f98; background: #f7f8fa; }
     .output-entry.error { border-left-color: var(--danger); background: #fffafa; }
     .output-entry.raw { border-left-color: #3b4148; background: #111418; color: #d7e2dc; }
     .output-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; }
@@ -104,7 +109,13 @@ export function htmlPage(): string {
     </section>
 
     <section>
-      <h2>流式输出</h2>
+      <div class="output-bar">
+        <h2>流式输出</h2>
+        <label class="inline-toggle" for="showDetails">
+          <input id="showDetails" type="checkbox">
+          详细日志
+        </label>
+      </div>
       <div id="output" class="output-timeline"></div>
     </section>
 
@@ -119,6 +130,8 @@ export function htmlPage(): string {
     let selectedSessionId = null;
     let pairingInFlight = false;
     let localPairingCodeAvailable = false;
+    let showDetailedOutput = false;
+    let currentOutputEvents = [];
     const $ = (id) => document.getElementById(id);
 
     function setConnection(text) { $("connection").textContent = text; }
@@ -158,10 +171,10 @@ export function htmlPage(): string {
       if (!payload || typeof payload !== "object") return [block(fallbackKind, "原始输出", line)];
 
       if (payload.type === "thread.started") {
-        return [block("status", "会话", "已创建 Codex 会话", payload.thread_id || "")];
+        return [block("detail", "会话", "已创建 Codex 会话", payload.thread_id || "")];
       }
       if (payload.type === "turn.started") {
-        return [block("status", "执行", "开始执行任务")];
+        return [block("detail", "执行", "开始执行任务")];
       }
       if (payload.type === "turn.completed") {
         const usage = formatUsage(payload.usage);
@@ -196,13 +209,14 @@ export function htmlPage(): string {
       }
       return [block("raw", "未识别事件", JSON.stringify(payload, null, 2))];
     }
+    function shouldShowOutputBlock(item) {
+      if (showDetailedOutput) return true;
+      return item.kind === "assistant" || item.kind === "error" || item.kind === "status";
+    }
     function eventToBlocks(event) {
       const kind = event.kind === "stderr" ? "error" : "raw";
       const text = event.text || "";
       if (!text) return [];
-      if (kind === "system") {
-        return [];
-      }
       if (event.kind === "system") {
         const body = text
           .replace("Session created. Starting controlled Codex runner.", "任务已创建，正在启动 Codex")
@@ -224,14 +238,19 @@ export function htmlPage(): string {
     function clearOutput() {
       $("output").innerHTML = "";
     }
-    function renderEmptyOutput() {
+    function renderEmptyOutput(text = "暂无输出") {
       clearOutput();
       const empty = document.createElement("div");
       empty.className = "output-empty";
-      empty.textContent = "暂无输出";
+      empty.textContent = text;
       $("output").appendChild(empty);
     }
+    function outputHasOnlyPlaceholder() {
+      return $("output").children.length === 1 && $("output").firstElementChild?.classList.contains("output-empty");
+    }
     function appendOutputBlock(item) {
+      if (!shouldShowOutputBlock(item)) return;
+      if (outputHasOnlyPlaceholder()) clearOutput();
       const entry = document.createElement("div");
       entry.className = "output-entry " + item.kind;
       const label = document.createElement("div");
@@ -250,7 +269,8 @@ export function htmlPage(): string {
       $("output").appendChild(entry);
       $("output").scrollTop = $("output").scrollHeight;
     }
-    function appendOutputEvent(event) {
+    function appendOutputEvent(event, record = true) {
+      if (record) currentOutputEvents.push(event);
       for (const item of eventToBlocks(event)) {
         appendOutputBlock(item);
       }
@@ -259,11 +279,15 @@ export function htmlPage(): string {
       appendOutputBlock(block("error", "错误", message));
     }
     function renderOutput(events) {
+      currentOutputEvents = events;
+      renderCurrentOutput();
+    }
+    function renderCurrentOutput() {
       clearOutput();
-      for (const event of events) {
-        appendOutputEvent(event);
+      for (const event of currentOutputEvents) {
+        appendOutputEvent(event, false);
       }
-      if (!$("output").children.length) renderEmptyOutput();
+      if (!$("output").children.length) renderEmptyOutput(showDetailedOutput ? "暂无输出" : "等待 Codex 输出");
     }
     function renderHistoryItem(session) {
       const button = document.createElement("button");
@@ -407,6 +431,8 @@ export function htmlPage(): string {
     $("start").onclick = async () => {
       try {
         clearOutput();
+        currentOutputEvents = [];
+        renderEmptyOutput("等待 Codex 输出");
         const data = await api("/api/tasks", {
           method: "POST",
           body: JSON.stringify({ prompt: $("prompt").value, workspace: $("workspace").value })
@@ -426,6 +452,10 @@ export function htmlPage(): string {
       await api("/api/tasks/" + activeSessionId + "/stop", { method: "POST" });
       $("stop").disabled = true;
       await refreshHistory();
+    };
+    $("showDetails").onchange = () => {
+      showDetailedOutput = $("showDetails").checked;
+      renderCurrentOutput();
     };
     loadHealth().catch((error) => setConnection(error.message));
   </script>

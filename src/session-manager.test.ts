@@ -18,6 +18,9 @@ const config: AppConfig = {
   promptMaxLength: 8000,
   tokenTtlMs: 60_000,
   pairingCodeTtlMs: 60_000,
+  pairingCodeLength: 6,
+  pairingFailureLimit: 5,
+  pairingFailureWindowMs: 60_000,
   dataDir: "",
 };
 
