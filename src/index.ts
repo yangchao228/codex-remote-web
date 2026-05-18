@@ -18,7 +18,13 @@ async function main(): Promise<void> {
   const audit = new AuditLog(config.dataDir);
   await audit.init();
 
-  const auth = new AuthService(config.tokenTtlMs, config.pairingCodeTtlMs);
+  const auth = new AuthService(
+    config.tokenTtlMs,
+    config.pairingCodeTtlMs,
+    config.pairingCodeLength,
+    config.pairingFailureLimit,
+    config.pairingFailureWindowMs,
+  );
   const runner = new CodexRunner(config);
   const sessions = new SessionManager(runner, audit);
   const restoredSessionCount = await sessions.restoreFromAudit();
@@ -37,6 +43,7 @@ async function main(): Promise<void> {
     }
     console.log(`Workspace allowlist: ${config.workspaceAllowlist.join(", ")}`);
     console.log(`Restored sessions: ${restoredSessionCount}`);
+    console.log(`Pairing code length: ${config.pairingCodeLength}`);
     console.log(`Pairing code: ${pairing.code}`);
     console.log(`Pairing expires at: ${new Date(pairing.expiresAt).toISOString()}`);
   });

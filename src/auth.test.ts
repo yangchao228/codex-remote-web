@@ -25,3 +25,18 @@ test("revokeAll invalidates existing phone sessions", () => {
   auth.revokeAll();
   assert.equal(auth.verifyBearer(`Bearer ${result.token}`), false);
 });
+
+test("pairing code length is configurable for remote access", () => {
+  const auth = new AuthService(60_000, 60_000, 12);
+  assert.match(auth.getPairingState().code, /^\d{12}$/);
+});
+
+test("invalid pairing attempts are rate limited per client key", () => {
+  const auth = new AuthService(60_000, 60_000, 6, 2, 60_000);
+  assert.throws(() => auth.pair("000000", "client-a"), /Invalid/);
+  assert.throws(() => auth.pair("000000", "client-a"), /Invalid/);
+  assert.throws(() => auth.pair(auth.getPairingState().code, "client-a"), /Too many invalid/);
+
+  const paired = auth.pair(auth.getPairingState().code, "client-b");
+  assert.equal(auth.verifyBearer(`Bearer ${paired.token}`), true);
+});

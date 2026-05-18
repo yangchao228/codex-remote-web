@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { loadConfig } from "./config.js";
+import { isLocalPairingRequest } from "./http.js";
 import { buildCodexCommand } from "./runner.js";
 import { redactSecrets, sanitizeTerminalText } from "./security.js";
 import { resolveAllowedWorkspace } from "./workspace.js";
@@ -46,4 +47,12 @@ test("codex command is explicit and does not include prompt text", () => {
 test("browser output strips terminal controls and redacts likely secrets", () => {
   assert.equal(sanitizeTerminalText("\u001b[31mred\u001b[0m"), "red");
   assert.equal(redactSecrets("token=sk-abcdefghijklmnopqrstuvwxyz"), "token=[REDACTED]");
+});
+
+test("local pairing detection respects tunnel forwarded client headers", () => {
+  assert.equal(isLocalPairingRequest("127.0.0.1", {}), true);
+  assert.equal(isLocalPairingRequest("::ffff:127.0.0.1", {}), true);
+  assert.equal(isLocalPairingRequest("127.0.0.1", { "cf-connecting-ip": "203.0.113.10" }), false);
+  assert.equal(isLocalPairingRequest("127.0.0.1", { "x-forwarded-for": "203.0.113.10" }), false);
+  assert.equal(isLocalPairingRequest("127.0.0.1", { "x-forwarded-for": "127.0.0.1" }), true);
 });

@@ -1,4 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from "node:http";
+import { IncomingHttpHeaders } from "node:http";
 import { AppConfig } from "./types.js";
 import { AuthService } from "./auth.js";
 import { SessionManager } from "./session-manager.js";
@@ -42,9 +43,39 @@ function requireAuth(request: IncomingMessage, response: ServerResponse, auth: A
   return false;
 }
 
-function isLoopbackRequest(request: IncomingMessage): boolean {
-  const address = request.socket.remoteAddress;
+function requestClientKey(request: IncomingMessage): string {
+  const cfIp = request.headers["cf-connecting-ip"];
+  if (typeof cfIp === "string" && cfIp.trim()) return `cf:${cfIp.trim()}`;
+
+  const forwardedFor = request.headers["x-forwarded-for"];
+  if (typeof forwardedFor === "string" && forwardedFor.trim()) {
+    return `xff:${forwardedFor.split(",")[0]?.trim() ?? "unknown"}`;
+  }
+
+  return `socket:${request.socket.remoteAddress ?? "unknown"}`;
+}
+
+function isLoopbackAddress(address: string | undefined): boolean {
   return address === "127.0.0.1" || address === "::1" || address === "::ffff:127.0.0.1";
+}
+
+function firstHeaderValue(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export function isLocalPairingRequest(
+  remoteAddress: string | undefined,
+  headers: IncomingHttpHeaders,
+): boolean {
+  const cfIp = firstHeaderValue(headers["cf-connecting-ip"])?.trim();
+  if (cfIp) return isLoopbackAddress(cfIp);
+
+  const forwardedFor = firstHeaderValue(headers["x-forwarded-for"])?.trim();
+  if (forwardedFor) {
+    return isLoopbackAddress(forwardedFor.split(",")[0]?.trim());
+  }
+
+  return isLoopbackAddress(remoteAddress);
 }
 
 function writeSse(response: ServerResponse, event: string, data: unknown): void {
@@ -79,14 +110,15 @@ export function createServer(config: AppConfig, auth: AuthService, sessions: Ses
           host: config.host,
           port: config.port,
           allowLan: config.allowLan,
-          localPairingCodeAvailable: isLoopbackRequest(request),
+          localPairingCodeAvailable: isLocalPairingRequest(request.socket.remoteAddress, request.headers),
+          pairingCodeLength: config.pairingCodeLength,
           workspaces: config.workspaceAllowlist,
         });
         return;
       }
 
       if (request.method === "POST" && url.pathname === "/api/local-pairing-code") {
-        if (!isLoopbackRequest(request)) {
+        if (!isLocalPairingRequest(request.socket.remoteAddress, request.headers)) {
           sendError(response, 403, "Pairing code can only be shown on the computer's localhost page");
           return;
         }
@@ -104,7 +136,7 @@ export function createServer(config: AppConfig, auth: AuthService, sessions: Ses
           sendError(response, 400, "Pairing code is required");
           return;
         }
-        const paired = auth.pair(body.code);
+        const paired = auth.pair(body.code, requestClientKey(request));
         sendJson(response, 200, {
           token: paired.token,
           expiresAt: new Date(paired.expiresAt).toISOString(),

@@ -88,6 +88,14 @@ npm run start
 npm run start:lan
 ```
 
+手机移动网络使用：
+
+```bash
+npm run dev:remote
+```
+
+然后按 [移动网络远程访问指南](REMOTE_MOBILE.md) 使用私有网络或受保护隧道连接。远程模式默认仍绑定 `127.0.0.1`，并使用 12 位配对码、较短配对有效期和配对错误限速。
+
 启动后看终端输出。localhost 模式打开本地地址，LAN 模式用手机打开终端打印的局域网地址。
 
 页面会要求输入配对码。这个配对码来自电脑终端。
@@ -121,6 +129,8 @@ REMOTE_CONTROL_CODEX_BIN=/path/to/codex npm run start
 | `npm test` | 跑测试 |
 | `npm run start` | 本机模式启动 |
 | `npm run start:lan` | 局域网模式启动 |
+| `npm run dev:remote` | 构建并以移动网络远程访问的安全默认值启动 |
+| `npm run start:remote` | 以移动网络远程访问的安全默认值启动已构建版本 |
 | `npm run smoke:local` | mock runner smoke 测试 |
 | `npm run smoke:codex` | 真实 Codex CLI smoke 测试 |
 | `npm run smoke:lan` | LAN 模式 smoke 测试 |
@@ -143,7 +153,7 @@ SSH 很强，但它给的是完整机器入口。
 - 多项目工作台：给每个工作目录配置项目别名、默认参数、安全策略和任务模板，方便同时跟进多个项目
 - 工作区状态看板：按项目展示最近任务、运行中任务、最后一次结果和历史记录筛选
 - 本地通知：长任务完成后给手机或桌面发提醒
-- 安全远程访问：人在外面时，可以用移动网络连接家里或公司电脑上的 Codex，但连接方式要经过设备授权、短期 token、访问审计和一键断开控制
+- 安全远程访问：人在外面时，可以用移动网络连接家里或公司电脑上的 Codex，详见 [移动网络远程访问指南](REMOTE_MOBILE.md)
 - 桌面常驻入口：减少每次启动服务的成本
 - 更强的安全模型：补充 threat model、权限配置和公网暴露风险提示
 

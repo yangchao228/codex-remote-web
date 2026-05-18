@@ -88,6 +88,14 @@ Run in LAN mode:
 npm run start:lan
 ```
 
+Run for mobile-data remote access:
+
+```bash
+npm run dev:remote
+```
+
+Then follow [Mobile Data Remote Access](REMOTE_MOBILE.md) to connect through a private network or protected tunnel. Remote mode still binds to `127.0.0.1` by default and uses a 12-digit pairing code, a shorter pairing lifetime, and pairing failure rate limiting.
+
 After startup, check the terminal output. In localhost mode, open the local URL. In LAN mode, open the printed LAN URL from your phone on the same trusted Wi-Fi.
 
 The page will ask for a pairing code. Read the code from the computer terminal.
@@ -121,6 +129,8 @@ REMOTE_CONTROL_CODEX_BIN=/path/to/codex npm run start
 | `npm test` | Run tests |
 | `npm run start` | Start in local mode |
 | `npm run start:lan` | Start in LAN mode |
+| `npm run dev:remote` | Build and start with safer defaults for mobile-data remote access |
+| `npm run start:remote` | Start the built server with safer defaults for mobile-data remote access |
 | `npm run smoke:local` | Smoke test with the mock runner |
 | `npm run smoke:codex` | Smoke test with the real Codex CLI runner |
 | `npm run smoke:lan` | Smoke test for LAN mode |
@@ -143,7 +153,7 @@ Near-term priorities:
 - Multi-project workspace: configure aliases, default parameters, safety policy, and task templates for each workspace, so it is easier to track several projects at once.
 - Workspace status dashboard: show recent tasks, running tasks, last result, and history filters by project.
 - Local notifications: notify the phone or desktop when a long task completes.
-- Safe remote access: allow a phone on mobile data to connect to Codex running on a home or office computer, with device authorization, short-lived tokens, access audit logs, and one-click disconnect.
+- Safe remote access: allow a phone on mobile data to connect to Codex running on a home or office computer. See [Mobile Data Remote Access](REMOTE_MOBILE.md).
 - Desktop resident entry point: reduce the cost of starting the service every time.
 - Stronger security model: document the threat model, permission model, and risks of public exposure.
 
