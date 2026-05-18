@@ -91,10 +91,10 @@ npm run start:lan
 手机移动网络使用：
 
 ```bash
-npm run dev:remote
+npm run remote:quick
 ```
 
-然后按 [移动网络远程访问指南](REMOTE_MOBILE.md) 使用私有网络或受保护隧道连接。远程模式默认仍绑定 `127.0.0.1`，并使用 12 位配对码、较短配对有效期和配对错误限速。
+然后按 [移动网络远程访问指南](REMOTE_MOBILE.md) 使用手机打开脚本打印的临时地址。quick tunnel 默认 24 小时自动关闭；远程模式仍绑定 `127.0.0.1`，并使用 12 位配对码、短期 token 和配对错误限速。
 
 启动后看终端输出。localhost 模式打开本地地址，LAN 模式用手机打开终端打印的局域网地址。
 
@@ -131,6 +131,7 @@ REMOTE_CONTROL_CODEX_BIN=/path/to/codex npm run start
 | `npm run start:lan` | 局域网模式启动 |
 | `npm run dev:remote` | 构建并以移动网络远程访问的安全默认值启动 |
 | `npm run start:remote` | 以移动网络远程访问的安全默认值启动已构建版本 |
+| `npm run remote:quick` | 一键启动 quick tunnel 试用，默认 24 小时自动关闭 |
 | `npm run smoke:local` | mock runner smoke 测试 |
 | `npm run smoke:codex` | 真实 Codex CLI smoke 测试 |
 | `npm run smoke:lan` | LAN 模式 smoke 测试 |

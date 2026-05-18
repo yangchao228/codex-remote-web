@@ -18,51 +18,71 @@
 2. **Cloudflare Tunnel + Access**：用 Cloudflare Access 先保护入口，再转发到本机服务。
 3. **Cloudflare quick tunnel**：无需账号即可生成临时 URL，只适合短时间验证，不适合常驻。
 
-## 方案 A：Cloudflare Quick Tunnel 演示
+## 方案 A：Cloudflare Quick Tunnel 一键试用
 
-### 1. 电脑终端 1：启动本地服务
+这是小范围试用的推荐入口。它会启动本地服务、创建 quick tunnel、打印手机访问地址和配对码，并在超时后自动关闭。
 
 在项目根目录执行：
+
+```bash
+npm run remote:quick
+```
+
+默认行为：
+
+- 构建项目。
+- 启动服务在 `127.0.0.1:4317`。
+- 创建 Cloudflare quick tunnel。
+- 打印手机访问 URL。
+- 使用 12 位配对码。
+- 配对码有效期为 15 分钟。
+- 手机 session token 有效期与 tunnel 超时时间一致。
+- 对错误配对尝试做限速。
+- 默认 24 小时后自动关闭本地服务和 tunnel。
+
+终端会打印类似内容：
+
+```text
+Phone URL:
+  https://example-words.trycloudflare.com
+
+Pairing code:
+  123456789012
+
+Auto-stop:
+  24h (...)
+```
+
+保持这个终端不要关闭。
+
+如果要缩短试用时间：
+
+```bash
+npm run remote:quick -- --ttl 30m
+npm run remote:quick -- --ttl 2h
+```
+
+当前脚本不允许超过 24 小时，避免用户忘记关闭临时公网入口。
+
+如果本机还没有 `cloudflared`，先按 Cloudflare 官方文档安装。
+
+### 手动两终端方式
+
+如果你不想用一键脚本，也可以手动启动。
+
+终端 1：
 
 ```bash
 npm run dev:remote
 ```
 
-这个命令会：
-
-- 构建项目。
-- 启动服务在 `127.0.0.1:4317`。
-- 使用 12 位配对码。
-- 配对码有效期为 5 分钟。
-- 手机 session token 有效期为 30 分钟。
-- 对错误配对尝试做限速。
-
-终端会打印类似内容：
-
-```text
-Codex Remote Control listening on http://127.0.0.1:4317
-Pairing code length: 12
-Pairing code: 123456789012
-Pairing expires at: ...
-```
-
-保持这个终端不要关闭。
-
-### 2. 电脑终端 2：创建临时 tunnel
-
-执行：
+终端 2：
 
 ```bash
 cloudflared tunnel --url http://127.0.0.1:4317
 ```
 
-如果本机还没有 `cloudflared`，先按 Cloudflare 官方文档安装。命令成功后会打印一个地址，例如：
-
-```text
-https://example-words.trycloudflare.com
-```
-
-保持这个终端不要关闭。关闭后，临时 URL 就不可用了。
+关闭任一终端后，对应服务或临时 URL 就不可用了。
 
 ### 3. 手机上测试
 
@@ -80,9 +100,9 @@ https://example-words.trycloudflare.com
 
 ### 4. 配对码过期怎么办
 
-默认配对码 5 分钟过期。过期后，在电脑本机页面刷新配对码，或重启终端 1 的服务获取新配对码。
+一键脚本默认配对码 15 分钟过期。过期后，停止脚本并重新运行 `npm run remote:quick` 获取新地址和新配对码。
 
-如果你只是做一次较慢的手动测试，也可以直接用更长的临时配对有效期启动：
+手动方式下，如果你只是做一次较慢的测试，可以直接用更长的临时配对有效期启动：
 
 ```bash
 npm run build
@@ -93,7 +113,12 @@ REMOTE_CONTROL_PAIRING_CODE_LENGTH=12 REMOTE_CONTROL_PAIRING_TTL_SECONDS=900 REM
 
 ### 5. 结束测试
 
-测试完成后，关闭两个终端里的进程：
+使用一键脚本时：
+
+- 到达 TTL 会自动关闭。
+- 按 `Ctrl+C` 会立即关闭本地服务和 tunnel。
+
+使用手动方式时，关闭两个终端里的进程：
 
 - `npm run dev:remote`
 - `cloudflared tunnel --url ...`
@@ -151,29 +176,69 @@ The core boundary stays the same:
 2. **Cloudflare Tunnel + Access**: use Cloudflare Access before forwarding to this local service.
 3. **Cloudflare quick tunnel**: easiest for a short demo, not for always-on use.
 
-## Option A: Cloudflare Quick Tunnel Demo
+## Option A: One-Command Cloudflare Quick Tunnel Demo
 
-### 1. Computer terminal 1: start the local service
+This is the recommended entry point for small-scale trials. It starts the local service, creates a quick tunnel, prints the phone URL and pairing code, and auto-stops after the timeout.
 
 Run from the project root:
+
+```bash
+npm run remote:quick
+```
+
+Defaults:
+
+- Build the project.
+- Start the service on `127.0.0.1:4317`.
+- Create a Cloudflare quick tunnel.
+- Print the phone URL.
+- Use a 12-digit pairing code.
+- Keep the pairing code valid for 15 minutes.
+- Keep the phone session token valid for the tunnel timeout.
+- Rate-limit invalid pairing attempts.
+- Auto-stop both the local service and tunnel after 24 hours.
+
+Example output:
+
+```text
+Phone URL:
+  https://example-words.trycloudflare.com
+
+Pairing code:
+  123456789012
+
+Auto-stop:
+  24h (...)
+```
+
+Keep this terminal open.
+
+To shorten the trial:
+
+```bash
+npm run remote:quick -- --ttl 30m
+npm run remote:quick -- --ttl 2h
+```
+
+The script does not allow more than 24 hours.
+
+Install `cloudflared` first if it is not already available.
+
+### Manual two-terminal fallback
+
+Terminal 1:
 
 ```bash
 npm run dev:remote
 ```
 
-This builds the project and starts the server on `127.0.0.1:4317` with a 12-digit pairing code, 5-minute pairing lifetime, 30-minute phone session token, and invalid pairing attempt limits.
-
-Keep this terminal open and use the pairing code printed there.
-
-### 2. Computer terminal 2: create the temporary tunnel
-
-Run:
+Terminal 2:
 
 ```bash
 cloudflared tunnel --url http://127.0.0.1:4317
 ```
 
-Install `cloudflared` first if it is not already available. The command prints a `https://...trycloudflare.com` URL. Keep this terminal open while testing.
+Closing either terminal stops the related local service or temporary URL.
 
 ### 3. Test from the phone
 
@@ -191,9 +256,9 @@ The phone UI shows user-facing answers, errors, and necessary status by default.
 
 ### 4. If the pairing code expires
 
-The default pairing code lifetime is 5 minutes. Refresh it from the localhost page on the computer, or restart terminal 1 to get a new code.
+The one-command script keeps the pairing code valid for 15 minutes. If it expires, stop the script and run `npm run remote:quick` again to get a new URL and pairing code.
 
-For a slower manual test, start with a longer temporary pairing lifetime:
+For a slower manual test in fallback mode, start with a longer temporary pairing lifetime:
 
 ```bash
 npm run build
@@ -204,7 +269,12 @@ This makes the pairing code valid for 15 minutes.
 
 ### 5. End the test
 
-Stop both terminals when the test is done:
+With the one-command script:
+
+- It auto-stops when TTL expires.
+- Press `Ctrl+C` to stop immediately.
+
+With manual mode, stop both terminals:
 
 - `npm run dev:remote`
 - `cloudflared tunnel --url ...`

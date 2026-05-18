@@ -91,10 +91,10 @@ npm run start:lan
 Run for mobile-data remote access:
 
 ```bash
-npm run dev:remote
+npm run remote:quick
 ```
 
-Then follow [Mobile Data Remote Access](REMOTE_MOBILE.md) to connect through a private network or protected tunnel. Remote mode still binds to `127.0.0.1` by default and uses a 12-digit pairing code, a shorter pairing lifetime, and pairing failure rate limiting.
+Then follow [Mobile Data Remote Access](REMOTE_MOBILE.md) and open the temporary URL printed by the script from your phone. The quick tunnel auto-stops after 24 hours by default. Remote mode still binds to `127.0.0.1` and uses a 12-digit pairing code, short-lived tokens, and pairing failure rate limiting.
 
 After startup, check the terminal output. In localhost mode, open the local URL. In LAN mode, open the printed LAN URL from your phone on the same trusted Wi-Fi.
 
@@ -131,6 +131,7 @@ REMOTE_CONTROL_CODEX_BIN=/path/to/codex npm run start
 | `npm run start:lan` | Start in LAN mode |
 | `npm run dev:remote` | Build and start with safer defaults for mobile-data remote access |
 | `npm run start:remote` | Start the built server with safer defaults for mobile-data remote access |
+| `npm run remote:quick` | One-command quick tunnel demo, auto-stops after 24 hours by default |
 | `npm run smoke:local` | Smoke test with the mock runner |
 | `npm run smoke:codex` | Smoke test with the real Codex CLI runner |
 | `npm run smoke:lan` | Smoke test for LAN mode |

@@ -7,6 +7,7 @@
     "dev": "npm run build && node dist/index.js",
     "dev:lan": "npm run build && npm run start:lan",
     "dev:remote": "npm run build && npm run start:remote",
+    "remote:quick": "node scripts/remote-quick.mjs",
     "start": "node dist/index.js",
     "start:lan": "REMOTE_CONTROL_HOST=0.0.0.0 REMOTE_CONTROL_ALLOW_LAN=true node dist/index.js",
     "start:remote": "REMOTE_CONTROL_PAIRING_CODE_LENGTH=12 REMOTE_CONTROL_PAIRING_TTL_SECONDS=300 REMOTE_CONTROL_TOKEN_TTL_SECONDS=1800 node dist/index.js",
