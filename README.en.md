@@ -34,7 +34,7 @@ This is a remote-control tool, but it behaves more like a task console. It does 
 ## Current Features
 
 - Local Web control panel
-- 6-digit pairing code shown in the computer terminal
+- Pairing code shown in the computer terminal. Local and LAN modes use 6 digits by default; remote quick mode uses 12 digits by default
 - Workspace selection from an allowlist
 - Codex task submission from the phone
 - Controlled `codex exec` process on the computer
@@ -44,6 +44,7 @@ This is a remote-control tool, but it behaves more like a task console. It does 
 - Historical task output replay
 - Local JSONL audit records
 - Trusted LAN mode
+- Temporary mobile-data access through `npm run remote:quick`, with a 24-hour auto-stop by default
 
 ## Preview
 
@@ -96,7 +97,7 @@ npm run remote:quick
 
 Then follow [Mobile Data Remote Access](REMOTE_MOBILE.md) and open the temporary URL printed by the script from your phone. The quick tunnel auto-stops after 24 hours by default. Remote mode still binds to `127.0.0.1` and uses a 12-digit pairing code, short-lived tokens, and pairing failure rate limiting.
 
-After startup, check the terminal output. In localhost mode, open the local URL. In LAN mode, open the printed LAN URL from your phone on the same trusted Wi-Fi.
+After startup, check the terminal output. In localhost mode, open the local URL. In LAN mode, open the printed LAN URL from your phone on the same trusted Wi-Fi. In remote quick mode, open the temporary HTTPS URL printed at the end of the script output.
 
 The page will ask for a pairing code. Read the code from the computer terminal.
 
@@ -186,6 +187,7 @@ The MVP is runnable and currently covered by:
 - Mock runner smoke test
 - Real Codex CLI smoke test
 - LAN mode smoke test
+- Remote quick external URL smoke test and phone mobile-data manual test
 
 The project is still early. Issues with real scenarios and improvement ideas are welcome.
 
